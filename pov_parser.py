@@ -42,9 +42,9 @@ def make_pov_parser(which = None):
             lista de objetos
     """
     unsigned = pp.Word(pp.nums)
-    signed = pp.Optional(pp.one_of("+ -")) + unsigned
+    signed = pp.Optional(pp.oneOf("+ -")) + unsigned
     floatn = pp.Combine(signed + pp.Optional("." + unsigned))
-    floatn = floatn.set_parse_action(lambda tkns: float(tkns[0]))
+    floatn = floatn.setParseAction(lambda tkns: float(tkns[0]))
     block_open = pp.Suppress('{')
     block_end  = pp.Suppress('}')
     comma = pp.Suppress(',')
@@ -53,29 +53,29 @@ def make_pov_parser(which = None):
                             floatn + pp.Suppress(",") +
                             floatn +
                       pp.Suppress(">"))
-    vector2.set_parse_action(lambda t: Vec2(*t[0]))
+    vector2.setParseAction(lambda t: Vec2(*t[0]))
 
     vector3 = pp.Group(pp.Suppress("<") +
                             floatn + pp.Suppress(",") +
                             floatn + pp.Suppress(",") +
                             floatn +
                       pp.Suppress(">"))
-    vector3.set_parse_action(lambda t: Vec3(*t[0]))
+    vector3.setParseAction(lambda t: Vec3(*t[0]))
 
     # Color by color name   eg. color Orange
-    color_name = pp.one_of(' '.join(Colors))
+    color_name = pp.oneOf(' '.join(Colors))
     color_color = pp.Suppress(pp.Keyword('color')) + color_name
-    color_color.set_parse_action(lambda tkn: RGB(*Colors[tkn[0]]))
+    color_color.setParseAction(lambda tkn: RGB(*Colors[tkn[0]]))
 
     # Color by rgb          eg. rgb <0.2, 0.4, 0.5>
     color_rgb = pp.Suppress(pp.Keyword('rgb')) + vector3
-    color_rgb.set_parse_action(lambda tkn: RGB(*tkn[0].as_list()))
+    color_rgb.setParseAction(lambda tkn: RGB(*tkn[0].as_list()))
 
     color = color_rgb ^ color_color
 
     directive = pp.Group(
                 '#include' +
-                pp.QuotedString(quote_char = '"') +
+                pp.QuotedString(quoteChar = '"') +
                 pp.Suppress(pp.LineEnd()))
 
     # TODO: suppress shouldn't be here
@@ -83,7 +83,7 @@ def make_pov_parser(which = None):
                 block_open +
                     color +
                 block_end)
-    pigment.set_parse_action(lambda t: ['rgb', t[0]])
+    pigment.setParseAction(lambda t: ['rgb', t[0]])
 
     obj_modifiers = (pp.ZeroOrMore(color) ^
                      pigment)
@@ -93,8 +93,8 @@ def make_pov_parser(which = None):
                 block_open +
                     vector3 + comma +
                     color +
-                block_end).set_parse_action(lambda t: t[0].insert(1, 'loc'))
-    light_source.add_parse_action(lambda t: t[0].insert(3, 'rgb'))
+                block_end).setParseAction(lambda t: t[0].insert(1, 'loc'))
+    light_source.addParseAction(lambda t: t[0].insert(3, 'rgb'))
 
     camera_look_at  = (pp.Keyword('look_at') + vector3)
     camera_up       = (pp.Keyword('up') + vector3)
@@ -113,8 +113,8 @@ def make_pov_parser(which = None):
                     vector3 + pp.Suppress(',') +              # Box corner 1
                     vector3 +                                 # Box corner 2
                     obj_modifiers +
-                block_end).set_parse_action(lambda t: t[0].insert(2, 'corner2'))
-    box.add_parse_action(lambda t: t[0].insert(1, 'corner1'))
+                block_end).setParseAction(lambda t: t[0].insert(2, 'corner2'))
+    box.addParseAction(lambda t: t[0].insert(1, 'corner1'))
 
     sphere = pp.Group(
                 pp.Keyword('sphere') +
@@ -122,8 +122,8 @@ def make_pov_parser(which = None):
                     vector3 + pp.Suppress(',') +            # Sphere center
                     floatn +                                # Sphere radius
                     obj_modifiers +
-                block_end).set_parse_action(lambda t: t[0].insert(2, 'radius'))
-    sphere.add_parse_action(lambda t: t[0].insert(1, 'center'))
+                block_end).setParseAction(lambda t: t[0].insert(2, 'radius'))
+    sphere.addParseAction(lambda t: t[0].insert(1, 'center'))
 
     torus = pp.Group(
                 pp.Keyword('torus') +
@@ -131,8 +131,8 @@ def make_pov_parser(which = None):
                     floatn + pp.Suppress(',') +         # Major axis
                     floatn +                            # Minor axis
                     obj_modifiers +
-                block_end).set_parse_action(lambda t: t[0].insert(2, 'minor'))
-    torus.add_parse_action(lambda t: t[0].insert(1, 'major'))
+                block_end).setParseAction(lambda t: t[0].insert(2, 'minor'))
+    torus.addParseAction(lambda t: t[0].insert(1, 'major'))
 
     plane = pp.Group(
                 pp.Keyword('plane') +
@@ -140,8 +140,8 @@ def make_pov_parser(which = None):
                     vector3 + pp.Suppress(',') +            # Plane normal
                     floatn +                                # Distance from origin
                     obj_modifiers +
-                block_end).set_parse_action(lambda t: t[0].insert(2, 'normal'))
-    plane.add_parse_action(lambda t: t[0].insert(1, 'distance'))
+                block_end).setParseAction(lambda t: t[0].insert(2, 'normal'))
+    plane.addParseAction(lambda t: t[0].insert(1, 'distance'))
 
     cylinder = pp.Group(
                 pp.Keyword('cylinder') +
@@ -150,9 +150,9 @@ def make_pov_parser(which = None):
                     vector3 + pp.Suppress(',') +            # Base center point
                     floatn +                                # Cap center point
                     obj_modifiers +
-                block_end).set_parse_action(lambda t: t[0].insert(3, 'radius'))
-    cylinder.add_parse_action(lambda t: t[0].insert(2, 'base_point'))
-    cylinder.add_parse_action(lambda t: t[0].insert(1, 'cap_point'))
+                block_end).setParseAction(lambda t: t[0].insert(3, 'radius'))
+    cylinder.addParseAction(lambda t: t[0].insert(2, 'base_point'))
+    cylinder.addParseAction(lambda t: t[0].insert(1, 'cap_point'))
 
     disc = pp.Group(
                 pp.Keyword('disc') +
@@ -161,9 +161,9 @@ def make_pov_parser(which = None):
                     vector3 + pp.Suppress(',') +            # Disc normal
                     floatn +                                # Radius
                     obj_modifiers +
-                block_end).set_parse_action(lambda t: t[0].insert(3, 'radius'))
-    disc.add_parse_action(lambda t: t[0].insert(2, 'normal'))
-    disc.add_parse_action(lambda t: t[0].insert(1, 'center'))
+                block_end).setParseAction(lambda t: t[0].insert(3, 'radius'))
+    disc.addParseAction(lambda t: t[0].insert(2, 'normal'))
+    disc.addParseAction(lambda t: t[0].insert(1, 'center'))
 
     cone = pp.Group(
                 pp.Keyword('cone') +
@@ -173,10 +173,10 @@ def make_pov_parser(which = None):
                     vector3 + pp.Suppress(',') +            # Cap center
                     floatn +                                # Cap radius
                     obj_modifiers +
-                block_end).set_parse_action(lambda t: t[0].insert(4, 'base_radius'))
-    cone.add_parse_action(lambda t: t[0].insert(3, 'base_point'))
-    cone.add_parse_action(lambda t: t[0].insert(2, 'cap_radius'))
-    cone.add_parse_action(lambda t: t[0].insert(1, 'cap_point'))
+                block_end).setParseAction(lambda t: t[0].insert(4, 'base_radius'))
+    cone.addParseAction(lambda t: t[0].insert(3, 'base_point'))
+    cone.addParseAction(lambda t: t[0].insert(2, 'cap_radius'))
+    cone.addParseAction(lambda t: t[0].insert(1, 'cap_point'))
 
     triangle = pp.Group(
                 pp.Keyword('triangle') +
@@ -185,20 +185,20 @@ def make_pov_parser(which = None):
                     vector3 + pp.Suppress(',') +            # Corner 2
                     vector3 +                               # Corner 3
                     obj_modifiers +
-                block_end).set_parse_action(lambda t: t[0].insert(3, 'corner3'))
-    triangle.add_parse_action(lambda t: t[0].insert(2, 'corner2'))
-    triangle.add_parse_action(lambda t: t[0].insert(1, 'corner1'))
+                block_end).setParseAction(lambda t: t[0].insert(3, 'corner3'))
+    triangle.addParseAction(lambda t: t[0].insert(2, 'corner2'))
+    triangle.addParseAction(lambda t: t[0].insert(1, 'corner1'))
 
     prism = pp.Group(
                 pp.Keyword('prism') +
                 block_open +
                     floatn + pp.Suppress(',') +         # Height 1
                     floatn + pp.Suppress(',') +         # Height 2
-                    pp.Group(pp.counted_array(pp.Suppress(',') + vector2)) +
+                    pp.Group(pp.countedArray(pp.Suppress(',') + vector2)) +
                     obj_modifiers +
-                block_end).set_parse_action(lambda t: t[0].insert(3, 'corners'))
-    prism.add_parse_action(lambda t: t[0].insert(2, 'height2'))
-    prism.add_parse_action(lambda t: t[0].insert(1, 'height1'))
+                block_end).setParseAction(lambda t: t[0].insert(3, 'corners'))
+    prism.addParseAction(lambda t: t[0].insert(2, 'height2'))
+    prism.addParseAction(lambda t: t[0].insert(1, 'height1'))
 
     things = (box ^ sphere ^ plane ^ triangle ^ cylinder ^ cone ^ disc ^
               torus ^ prism)
@@ -206,9 +206,9 @@ def make_pov_parser(which = None):
     polygon = pp.Group(
                 pp.Keyword('polygon') +
                 block_open +
-                    pp.Group(pp.counted_array(pp.Suppress(',') + vector2)) +
+                    pp.Group(pp.countedArray(pp.Suppress(',') + vector2)) +
                     obj_modifiers +
-                block_end).set_parse_action(lambda t: t[0].insert(1, 'corners'))
+                block_end).setParseAction(lambda t: t[0].insert(1, 'corners'))
 
     things = (box ^ sphere ^ plane ^ triangle ^ cylinder ^ cone ^ disc ^
               torus ^ prism ^ polygon)
@@ -223,7 +223,7 @@ def make_pov_parser(which = None):
 
 def parser(src):
     psr =  make_pov_parser()
-    return psr.parse_string(src)
+    return psr.parseString(src)
 """
  _____         _                     _   _
 |_   _|__  ___| |_   _ __ ___  _   _| |_(_)_ __   ___  ___
@@ -235,7 +235,7 @@ def parser(src):
 
 def test_light_source():
     parser = make_pov_parser('light_source')
-    r = parser.parse_string('light_source { <1, 2, 3>, rgb <0.1, 0.2, 0.3>}')
+    r = parser.parseString('light_source { <1, 2, 3>, rgb <0.1, 0.2, 0.3>}')
 
 
 def test_thing(thing, pars):
@@ -244,7 +244,7 @@ def test_thing(thing, pars):
     """
     parser = make_pov_parser(thing)
     try:
-        parsed = parser.parse_string(
+        parsed = parser.parseString(
                 thing + '{' + pars + '\n'
                         '      pigment {\n'
                         '          rgb <0.11, 0.22, 0.33>\n'
@@ -273,7 +273,7 @@ def test_camera():
         cam_s = (f'camera {{{cam_params[0]} {cam_params[1]} {cam_params[2]} '
                  f'{cam_params[3]}}}')
         print(cam_s)
-        print(parser.parse_string(cam_s))
+        print(parser.parseString(cam_s))
 
     print('\nTest if missing parameters are detected:'
           '\n' + '-'*70 +
@@ -281,7 +281,7 @@ def test_camera():
           '\n' + '-'*70)
     try:
         cam_s = 'camera {location <1, 2, 3> up <7, 8, 9> angle 66}'
-        print(parser.parse_string(cam_s))
+        print(parser.parseString(cam_s))
 
     except pp.ParseException as err:
         print(err.explain())
@@ -294,7 +294,7 @@ def test_basics(rule, cases):
     parser = make_pov_parser(rule)
     for case in cases:
         print(f'    {case} => ', end = '')
-        parsed = parser.parse_string(case)
+        parsed = parser.parseString(case)
         print(f'{parsed}')
         if rule.startswith('vector'):
             print(f'{parsed[0].x}')

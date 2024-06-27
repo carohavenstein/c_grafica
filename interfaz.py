@@ -156,7 +156,7 @@ class MainWindow(Gtk.Window):
         """ Renderizar la imagen que corresponde al estado actual editor.
         """
         src = self.pov_editor.get_text()
-        elements = parser(src).as_list()
+        elements = parser(src)
 
         catalog = {
             'cameras': [],
