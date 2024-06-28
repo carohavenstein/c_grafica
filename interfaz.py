@@ -34,6 +34,7 @@ from camera import Camera
 from light import Light
 from box import Box
 from sphere import Sphere
+from cylinder import Cylinder
 from tracer import tracer
 
 import subprocess as sp
@@ -179,6 +180,9 @@ class MainWindow(Gtk.Window):
 
             elif key == 'box':
                 catalog['things'].append(Box(el[1:]))
+
+            elif key == 'cylinder':
+                catalog['things'].append(Cylinder(el[1:]))
 
             else:                               # Es un elemento desconocido!
                 print('Pánico...')
