@@ -17,35 +17,26 @@ class Cylinder(Thing):
         base_point = self.params['base_point']
         cap_point = self.params['cap_point']
         radius = self.params['radius']
-
-        a = ray.dir.x**2 + ray.dir.z**2
-        b = 2 * (ray.loc.x * ray.dir.x + ray.loc.z * ray.dir.z)
-        c = ray.loc.x**2 + ray.loc.z**2 - radius**2
         
-        D = b**2 - 4*a*c
-
-        #print('a: ', a)
-        #print('b: ', b)
-        #print('c: ', c)
-        #print('D: ', D)
-
-        if D > 0:
-            t1 = (-b - sqrt(D))/(2*a)
-            t2 = (-b + sqrt(D))/(2*a)
+        if base_point.x == cap_point.x and base_point.z == cap_point.z:
+            a = ray.dir.x**2 + ray.dir.z**2
+            b = 2 * (ray.dir.x*ray.loc.x - ray.dir.x*base_point.x + ray.dir.z*ray.loc.z - ray.dir.z*base_point.z)
+            c = ray.loc.x**2 + base_point.x**2 - 2*ray.loc.x*base_point.x + ray.loc.z**2 + base_point.z**2 - 2*ray.loc.z*base_point.z - radius**2
             
-            print('t1: ', t1)
-            print('t2: ', t2)
-            #z1 = ray.loc.y + t1 * ray.dir.y
-            #z2 = ray.loc.y + t2 * ray.dir.y
+            D = b**2 - 4*a*c
             
-            print('ray.at(t1): ', ray.at(t1))
-            print('ray.at(t2): ', ray.at(t2))
-
-            h1 = Hit(t1, (ray.at(t1)).normalized(), self)
-            h2 = Hit(t2, (ray.at(t2)).normalized(), self)
-            
-            return [h1, h2]
+            if D > 0:
+                t1 = (-b - sqrt(D))/(2*a)
+                t2 = (-b + sqrt(D))/(2*a)
+                
+                h1 = Hit(t1, (ray.at(t1)).normalized(), self)
+                h2 = Hit(t2, (ray.at(t2)).normalized(), self)
+                
+                return [h1, h2] 
+            else:
+                return []
         else:
+            print('Cylinder is not aligned with y axis')
             return []
 
 
