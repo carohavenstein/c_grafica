@@ -20,6 +20,6 @@ cylinder {
 }
 
 sphere {
-    <8, 0, -3>, 3
+    <8, 0, -3>, 1
     pigment {rgb <1, 1, 0>}
 }

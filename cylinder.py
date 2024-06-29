@@ -18,26 +18,31 @@ class Cylinder(Thing):
         cap_point = self.params['cap_point']
         radius = self.params['radius']
         
+        hit_list = []
+        
         if base_point.x == cap_point.x and base_point.z == cap_point.z:
             a = ray.dir.x**2 + ray.dir.z**2
             b = 2 * (ray.dir.x*ray.loc.x - ray.dir.x*base_point.x + ray.dir.z*ray.loc.z - ray.dir.z*base_point.z)
             c = ray.loc.x**2 + base_point.x**2 - 2*ray.loc.x*base_point.x + ray.loc.z**2 + base_point.z**2 - 2*ray.loc.z*base_point.z - radius**2
-            
             D = b**2 - 4*a*c
-            
+
             if D > 0:
                 t1 = (-b - sqrt(D))/(2*a)
                 t2 = (-b + sqrt(D))/(2*a)
+
+                if ray.at(t1).y > base_point.y and ray.at(t1).y < cap_point.y:
+                    h1 = Hit(t1, (ray.at(t1)).normalized(), self)
+                    hit_list.append(h1)
+                    print('hit_list', hit_list)
                 
-                h1 = Hit(t1, (ray.at(t1)).normalized(), self)
-                h2 = Hit(t2, (ray.at(t2)).normalized(), self)
-                
-                return [h1, h2] 
-            else:
-                return []
+                if ray.at(t2).y > base_point.y and ray.at(t2).y < cap_point.y:
+                    h2 = Hit(t2, (ray.at(t2)).normalized(), self)
+                    hit_list.append(h2)
+                    print('hit_list', hit_list)
         else:
             print('Cylinder is not aligned with y axis')
-            return []
+        
+        return hit_list
 
 
 def test_cylinder():
