@@ -18,30 +18,39 @@ class Cylinder(Thing):
         cap_point = self.params['cap_point']
         radius = self.params['radius']
 
-        a = ray.dir.x**2 + ray.dir.y**2
-        b = 2 * (ray.loc.x * ray.dir.x + ray.loc.y * ray.dir.y)
-        c = ray.loc.x**2 + ray.loc.y**2 - radius**2
+        a = ray.dir.x**2 + ray.dir.z**2
+        b = 2 * (ray.loc.x * ray.dir.x + ray.loc.z * ray.dir.z)
+        c = ray.loc.x**2 + ray.loc.z**2 - radius**2
         
         D = b**2 - 4*a*c
+
+        #print('a: ', a)
+        #print('b: ', b)
+        #print('c: ', c)
+        #print('D: ', D)
 
         if D > 0:
             t1 = (-b - sqrt(D))/(2*a)
             t2 = (-b + sqrt(D))/(2*a)
             
-            #z1 = ray.loc.z + t1 * ray.dir.z
-            #z2 = ray.loc.z + t2 * ray.dir.z
+            print('t1: ', t1)
+            print('t2: ', t2)
+            #z1 = ray.loc.y + t1 * ray.dir.y
+            #z2 = ray.loc.y + t2 * ray.dir.y
             
-            h1 = Hit(t1, (ray.at(t1)).normalized() - base_point, self)
-            h2 = Hit(t2, (ray.at(t2)).normalized() - base_point, self)
+            print('ray.at(t1): ', ray.at(t1))
+            print('ray.at(t2): ', ray.at(t2))
 
+            h1 = Hit(t1, (ray.at(t1)).normalized(), self)
+            h2 = Hit(t2, (ray.at(t2)).normalized(), self)
+            
             return [h1, h2]
-
         else:
             return []
 
 
 def test_cylinder():
-    cyl = Cylinder(['base_point', Vec3(8, 0, 0), 'cap_point', Vec3(8, 10, 0), 'radius', 4.2])
+    cyl = Cylinder(['base_point', Vec3(8, -2, 0), 'cap_point', Vec3(8, 2, 0), 'radius', 4.2])
     print(cyl)
 
     ray = Ray(Vec3(0, 0, 0), Vec3(1, 0, 0))
