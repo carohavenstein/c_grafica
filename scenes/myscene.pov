@@ -3,7 +3,7 @@
 
 camera {
     location <0, 0, 0>
-    look_at <10, 0, 0>
+    look_at <8, 0, 0>
     up <0, 1, 0>
     angle 60
 }

@@ -151,8 +151,8 @@ def make_pov_parser(which = None):
                     floatn +                                # Cap center point
                     obj_modifiers +
                 block_end).setParseAction(lambda t: t[0].insert(3, 'radius'))
-    cylinder.addParseAction(lambda t: t[0].insert(2, 'base_point'))
-    cylinder.addParseAction(lambda t: t[0].insert(1, 'cap_point'))
+    cylinder.addParseAction(lambda t: t[0].insert(2, 'cap_point'))
+    cylinder.addParseAction(lambda t: t[0].insert(1, 'base_point'))
 
     disc = pp.Group(
                 pp.Keyword('disc') +
