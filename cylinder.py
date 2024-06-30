@@ -30,15 +30,15 @@ class Cylinder(Thing):
                 t1 = (-b - sqrt(D))/(2*a)
                 t2 = (-b + sqrt(D))/(2*a)
 
-                if ray.at(t1).y > base_point.y and ray.at(t1).y < cap_point.y:
-                    h1 = Hit(t1, (ray.at(t1)).normalized(), self)
-                    hit_list.append(h1)
-                    print('hit_list', hit_list)
+                #if ray.at(t1).y > base_point.y and ray.at(t1).y < cap_point.y:
+                normal_vect = Vec3(ray.at(t1).x - base_point.x, 0, ray.at(t1).z - base_point.z)
+                h1 = Hit(t1, normal_vect.normalized(), self)
+                hit_list.append(h1)
                 
-                if ray.at(t2).y > base_point.y and ray.at(t2).y < cap_point.y:
-                    h2 = Hit(t2, (ray.at(t2)).normalized(), self)
-                    hit_list.append(h2)
-                    print('hit_list', hit_list)
+                #if ray.at(t2).y > base_point.y and ray.at(t2).y < cap_point.y:
+                normal_vect = Vec3(ray.at(t2).x - base_point.x, 0, ray.at(t2).z - base_point.z)
+                h2 = Hit(t2, normal_vect.normalized(), self)
+                hit_list.append(h2)
         else:
             print('Cylinder is not aligned with y axis')
         
