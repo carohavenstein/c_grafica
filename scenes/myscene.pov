@@ -9,7 +9,7 @@ camera {
 }
 
 light_source {
-    <4, 6, 9>,
+    <4, 6, 0>,
     rgb <1, 1, 1>
 }
 
